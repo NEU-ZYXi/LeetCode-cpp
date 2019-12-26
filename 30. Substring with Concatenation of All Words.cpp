@@ -2,37 +2,37 @@ class Solution {
 public:
     vector<int> findSubstring(string s, vector<string>& words) {
         vector<int> ans;
-        if (words.size() == 0) {
+        if (words.empty()) {
             return ans;
         }
         unordered_map<string, int> map;
+        unordered_map<string, int> cur_map;
         for (string word : words) {
             map[word]++;
         }
-        unordered_map<string, int> cur_map;
         int n = words.size(), s_len = s.size(), w_len = words[0].size();
         for (int i = 0; i < w_len; ++i) {
-            int l = i, r = i, cnt = 0;
-            while (r <= s_len - w_len) {
-                string tmp = s.substr(r, w_len);
-                if (map.count(tmp) == 0) {
-                    cur_map.clear();
+            int start = i, end = i, cnt = 0;
+            while (end <= s_len - w_len) {
+                string cur_str = s.substr(end, w_len);
+                if (map.count(cur_str) == 0) {
                     cnt = 0;
-                    l = r + w_len;
+                    start = end + w_len;
+                    cur_map.clear();
                 } else {
-                    cur_map[tmp]++;
+                    cur_map[cur_str]++;
                     cnt++;
-                    while (cur_map[tmp] > map[tmp]) {
-                        string left_substr = s.substr(l, w_len);
-                        cur_map[left_substr]--;
+                    while (cur_map[cur_str] > map[cur_str]) {
+                        string left_str = s.substr(start, w_len);
+                        cur_map[left_str]--;
                         cnt--;
-                        l += w_len;
+                        start += w_len;
                     }
                     if (cnt == n) {
-                        ans.push_back(l);
+                        ans.push_back(start);
                     }
                 }
-                r += w_len;
+                end += w_len;
             }
             cur_map.clear();
         }
